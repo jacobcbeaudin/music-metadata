@@ -49,17 +49,11 @@ class FlacFile:
     def get_metadata(cls, file_path: os.path) -> dict:
         metadata = {}
         audio = FLAC(file_path)
-        if cls.TITLE_KEY in audio:
-            title = audio[cls.TITLE_KEY][0]
-            metadata[cls.TITLE_KEY] = title
-        else:
-            raise Exception("Title not found in metadata.")
-
-        if cls.ARTIST_KEY in audio:
-            artist = audio[cls.ARTIST_KEY][0]
-            metadata[cls.ARTIST_KEY] = artist
-        else:
-            raise Exception("Artist not found in metadata.")
+        for key in [cls.TITLE_KEY, cls.ARTIST_KEY]:
+            if key in audio:
+                metadata[key] = audio[key][0]
+            else:
+                raise Exception(f"{key} not found in metadata.")
 
         logger.info(f"file path: {song_file}")
         for k, v in metadata.items():
